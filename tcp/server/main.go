@@ -3,24 +3,24 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"net"
 )
 
 // tcp服务端
 func main() {
-	// 监听杜纳开
+	// 监听端口
 	listen, err := net.Listen("tcp", "127.0.0.1:20000")
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 		return
 	}
+	defer listen.Close()
 	// 等待客户端链接
 	for {
 		// listen.Accept如果没有链接会一直阻塞
 		conn, err := listen.Accept() //等待建立链接
 		if err != nil {
-			log.Fatalln(err)
+			fmt.Println(err)
 			continue
 		}
 		// 启动一个goroutine去处理链接
@@ -34,14 +34,15 @@ func process(conn net.Conn) {
 	for {
 		reader := bufio.NewReader(conn)
 		var buf [1024]byte
+
 		n, err := reader.Read(buf[:])
 		if err != nil {
-			log.Fatalln(err)
-			return
+			fmt.Println(err)
+			break
 		}
 		recv := string(buf[:n])
 		fmt.Println("接收到的数据是:", recv)
-		//conn.Write(buf[:n])
-		conn.Write([]byte("ok"))
+		conn.Write(buf[:n])
+		//conn.Write([]byte("ok"))
 	}
 }

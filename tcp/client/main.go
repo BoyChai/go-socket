@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"net"
 	"os"
 	"strings"
@@ -14,7 +13,7 @@ func main() {
 	// 和服务端建立链接
 	dial, err := net.Dial("tcp", "127.0.0.1:20000")
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 		return
 	}
 	// 最后关闭链接
@@ -30,7 +29,6 @@ func main() {
 		var buf [1024]byte
 		n, _ := dial.Read(buf[:])
 		fmt.Println(string(buf[:n]))
-
 	}
 
 }
